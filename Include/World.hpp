@@ -24,6 +24,7 @@ public:
     World(const Vector2u &_size);
     const Vector2u &getSize() const;
     const Vector2f &getBlockSize() const;
+    void destroy(const Vector2u &position);
     void aff(RenderTarget &window) const;
 
 private:

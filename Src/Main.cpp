@@ -14,6 +14,7 @@ using namespace sf;
 
 int main()
 {
+    srand(time(nullptr));
     RenderWindow window(VideoMode(900, 900), "Follow Your Memory", Style::Close);
     View view(Vector2f(0, 0), Vector2f(window.getSize().x, window.getSize().y));
     World world(Vector2u(101, 101));
@@ -25,17 +26,18 @@ int main()
             if (event.type == Event::Closed)
                 window.close();
             else if (event.type == Event::KeyPressed) {
-                Vector2i way;
+                Orientation way = (Orientation)-1;
 
                 if (event.key.code == Keyboard::Up)
-                    way = Vector2i(0, -1);
+                    way = Up;
                 else if (event.key.code == Keyboard::Down)
-                    way = Vector2i(0, 1);
+                    way = Down;
                 else if (event.key.code == Keyboard::Left)
-                    way = Vector2i(-1, 0);
+                    way = Left;
                 else if (event.key.code == Keyboard::Right)
-                    way = Vector2i(1, 0);
-                player.move(way);
+                    way = Right;
+                if (way != -1)
+                    player.move(way);
             }
         }
         player.update();

@@ -25,6 +25,12 @@ const Vector2f &World::getBlockSize() const
     return blockSize;
 }
 
+void World::destroy(const Vector2u &position)
+{
+    // TODO
+    tab[position.x][position.y].hole = true;
+}
+
 void World::aff(RenderTarget &window) const
 {
     VertexArray vertexArray(Quads);
