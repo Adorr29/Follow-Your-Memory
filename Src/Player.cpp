@@ -8,14 +8,22 @@
 #include "Player.hpp"
 #include "Error.hpp"
 
-Player::Player(World &_world)
-    : world(_world), spawnPosition((_world.getSize().x - 1) / 2.0, (_world.getSize().y - 1) / 2.0), moveStatus(0), speed(0.2), orientation(Down), movingStep(0)
+Player::Player(World &_world, const bool &_isSoul)
+    : world(_world), position(_world.getSize() / (Uint32)2), moveStatus(0), speed(0.2), orientation(Down), movingStep(0), isSoul(_isSoul)
 {
-    generateSoulMove(10);
-    reset();
 }
 
-Vector2f Player::getPosition() const
+const Vector2u &Player::getPosition() const
+{
+    return position;
+}
+
+const Vector2u &Player::getNextPosition() const
+{
+    return nextPosition;
+}
+
+Vector2f Player::getFloatPosition() const
 {
     const Vector2f diff((int)nextPosition.x - (int)position.x, (int)nextPosition.y - (int)position.y);
     const Vector2f floatPosition(position.x, position.y);
@@ -23,9 +31,18 @@ Vector2f Player::getPosition() const
     return floatPosition + diff * moveStatus;
 }
 
+void Player::setPosition(const Vector2u &_position)
+{
+    position = _position;
+    nextPosition = _position;
+    moveStatus = 0;
+    orientation = Down; // ?
+    movingStep = 0;
+}
+
 void Player::centerView(View &view)
 {
-    view.setCenter(world.getBlockSize().x * (getPosition().x + 0.5), world.getBlockSize().y * (getPosition().y + 0.5));
+    view.setCenter(world.getBlockSize().x * (getFloatPosition().x + 0.5), world.getBlockSize().y * (getFloatPosition().y + 0.5));
 }
 
 bool Player::move(const Orientation &way)
@@ -42,18 +59,6 @@ void Player::update()
 {
     if (position != nextPosition) {
         if (moveStatus + speed > 1.0) {
-            if ((Vector2i)nextPosition - (Vector2i)position == convertToVector(soulMove[index])) {
-                index++;
-                if (index >= soulMove.size()) {
-                    spawnPosition = nextPosition;
-                    generateSoulMove(10); // 10 ?
-                    index = 0;
-                }
-            }
-            else {
-                world.destroy(nextPosition);
-                reset();
-            }
             moveStatus = 0;
             position = nextPosition;
         }
@@ -61,17 +66,6 @@ void Player::update()
             moveStatus += speed;
         movingStep = moveStatus * (float)(5 - 1);
     }
-}
-
-void Player::reset()
-{
-    position = spawnPosition;
-    nextPosition = spawnPosition;
-    moveStatus = 0;
-    //speed = 0.2; // ?
-    orientation = Down; // ?
-    movingStep = 0;
-    index = 0;
 }
 
 void Player::aff(RenderTarget &window) const
@@ -86,15 +80,10 @@ void Player::aff(RenderTarget &window) const
     textureSize = Vector2f(texture.getSize().x / 5.0, texture.getSize().y / 4.0);
     sprite.setTexture(&texture);
     sprite.setTextureRect(IntRect(textureSize.x * movingStep, textureSize.x * orientation, textureSize.x, textureSize.y));
-    sprite.setPosition(world.getBlockSize().x * getPosition().x, world.getBlockSize().y * getPosition().y);
+    sprite.setPosition(world.getBlockSize().x * getFloatPosition().x, world.getBlockSize().y * getFloatPosition().y);
+    if (isSoul)
+        sprite.setFillColor(Color(255, 255, 255, 100));
     window.draw(sprite);
-}
-
-void Player::generateSoulMove(const size_t &size)
-{
-    soulMove.clear();
-    for (size_t i = 0; i < size; i++)
-        soulMove.push_back((Orientation)(rand() % 4));
 }
 
 Vector2i Player::convertToVector(const Orientation &way)

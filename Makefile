@@ -13,6 +13,7 @@ SRCDIR		=	Src/
 INCDIR		=	Include/
 
 SRC		=	$(SRCDIR)Main.cpp \
+			$(SRCDIR)Game.cpp \
 			$(SRCDIR)World.cpp \
 			$(SRCDIR)Player.cpp \
 			$(SRCDIR)Error.cpp \

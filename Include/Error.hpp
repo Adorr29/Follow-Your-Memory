@@ -5,11 +5,10 @@
 ** Error.hpp
 */
 
-#ifndef ERROR_HPP
-#define ERROR_HPP
+#pragma once
 
-#include <string>
 #include <exception>
+#include <string>
 
 using namespace std;
 
@@ -22,5 +21,3 @@ public:
 private:
     const string message;
 };
-
-#endif

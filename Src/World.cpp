@@ -27,7 +27,6 @@ const Vector2f &World::getBlockSize() const
 
 void World::destroy(const Vector2u &position)
 {
-    // TODO
     tab[position.x][position.y].hole = true;
 }
 

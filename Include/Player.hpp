@@ -5,8 +5,7 @@
 ** Player.hpp
 */
 
-#ifndef PLAYER_HPP
-#define PLAYER_HPP
+#pragma once
 
 #include <SFML/Graphics.hpp>
 #include "World.hpp"
@@ -25,29 +24,26 @@ enum Orientation
 class Player
 {
 public:
-    Player(World &_world);
-    Vector2f getPosition() const;
+    Player(World &_world, const bool &_isSoul = false);
+    const Vector2u &getPosition() const;
+    const Vector2u &getNextPosition() const;
+    Vector2f getFloatPosition() const;
+    void setPosition(const Vector2u &_position);
     void centerView(View &view);
     bool move(const Orientation &way);
     void update();
-    void reset();
     void aff(RenderTarget &window) const;
 
 private:
-    void generateSoulMove(const size_t &size);
     Vector2i convertToVector(const Orientation &way);
 
 private:
     World &world;
-    Vector2u spawnPosition;
     Vector2u position;
     Vector2u nextPosition;
     float moveStatus;
     float speed;
     Orientation orientation;
     size_t movingStep;
-    vector<Orientation> soulMove;
-    size_t index;
+    bool isSoul;
 };
-
-#endif

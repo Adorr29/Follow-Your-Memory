@@ -5,8 +5,7 @@
 ** World.hpp
 */
 
-#ifndef WORLD_HPP
-#define WORLD_HPP
+#pragma once
 
 #include <SFML/Graphics.hpp>
 
@@ -36,5 +35,3 @@ private:
     Block **tab;
     const Vector2f blockSize;
 };
-
-#endif
